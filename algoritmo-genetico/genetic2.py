@@ -48,7 +48,7 @@ def check_restritions(x):
     print(g4(x1, x2, x3, x4))
     print('f')
     print(f(x1, x2, x3, x4))
-    return (g1(x1, x2, x3, x4) <= 0 and g2(x1, x2, x3, x4) <= 0  and g3(x1, x2, x3, x4) <= 0)
+    return (g1(x1, x2, x3, x4) <= 0 and g2(x1, x2, x3, x4) <= 0  and g3(x1, x2, x3, x4) <= 0 and g4(x1, x2, x3, x4) <= 0)
 
 print(check_restritions([0.812500,  0.437500,  42.09844539, 176.63659855]))
 x = init()
