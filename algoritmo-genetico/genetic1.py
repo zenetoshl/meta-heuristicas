@@ -16,7 +16,13 @@ def g3 (x1, x2):
     return ((((1)/(math.sqrt(2)*(x2) + x1)) * P) - sig)
 
 def f(x1, x2):
-    return ((2*(math.sqrt(2) * x1) + x2)*L)
+    return ((2 * (math.sqrt(2) * x1) + x2) * L)
+
+class Complex:
+    def __init__(self, realpart, imagpart):
+        self.r = realpart
+        self.i = imagpart
+
 
 def init():
     l = []
@@ -28,16 +34,23 @@ def init():
 def check_restritions(x):
     x1 = x[0]
     x2 = x[1]
-    print("g1")
-    print(g1(x1, x2))
-    print("g2")
-    print(g2(x1, x2))
-    print("g3")
-    print(g3(x1, x2))
-    print("f")
-    print(f(x1, x2))
     return (g1(x1, x2) <= 0 and g2(x1, x2) <= 0  and g3(x1, x2) <= 0)
 
-print(check_restritions([0.7886751284, 0.4082483080]))
-x = init()
-print(x)
+def fit(x):
+    x1 = x[0]
+    x2 = x[1]
+    fitness = f(x1, x2)
+    if(not check_restritions(x)):
+        fitness = fitness * 1.5
+    return fitness
+
+
+def generate_population(n):
+    r = []
+    for i in range(n):
+        r.append(init())
+    return r
+
+x = generate_population(1000)
+for item in x:
+    print(fit(item))
