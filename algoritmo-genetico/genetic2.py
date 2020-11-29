@@ -8,6 +8,7 @@ sig = 2
 L = 100
 N = 25000
 I = 100
+T = 50
 best = 10000000
 bestx = [0, 0, 0, 0]
 oldBest = 1000000000
@@ -29,22 +30,18 @@ class solution:
     def check_restritions(self, x):
         multiplier = 1
         if(not (self.g1() <= 0 )):
-            print('g1')
             multiplier = multiplier + 10000000000
         if(not (self.g2() <= 0) ):
-            print('g2')
             multiplier = multiplier + 10000000000
         if(not (self.g3() <= 0) ):
-            print('g3')
             multiplier = multiplier + 10000000000
         if(not (self.g4() <= 0) ):
-            print('g4')
             multiplier = multiplier + 10000000000
         return multiplier
 
     def mutate(self):
             for i in range(4):
-                if(rd.uniform(0, 1) > 1):
+                if(rd.uniform(0, 1) > 0.8):
                     u = rd.uniform(0, 1)
                     if(i < 2):
                         pert = 0.2 * (100) * ((2*u) - 1)
@@ -106,8 +103,8 @@ def breed_generation(pop):
     gen = gen + 1
     pop.sort(key=lambda x: x.fitness, reverse=False)
     pop = pop [0:int(N/2)]
-    breeded_generation = [pop[0]]
-    for i in range(N - 1):
+    breeded_generation = pop[0:T]
+    for i in range(N - T):
         p = []
         p.append(select(pop))
         p.append(select(pop))
@@ -158,8 +155,8 @@ def set_genes(p1, p2):
                 genes.append(p2.x[i])
     return genes
 
-
-optimal = solution([0.8419575940040076, 0.415492898727734, 43.42255673512729, 161.0265340906853])
+# [0.8419575940040076, 0.415492898727734, 43.42255673512729, 161.0265340906853]
+optimal = solution([0.7980460278996793, 0.3999700397384842, 41.1834968073384, 188.37597974493167])
 print(optimal.fitness)
 
 best = 10000000
@@ -172,7 +169,7 @@ for i in range(I):
     oldBest = 1000000000
     gen = 0
     pop = generate_population(N)
-    while ((oldBest - best) > 0.4 and maxGen > gen):
+    while ((oldBest - best) > 0.2 and maxGen > gen):
         pop = breed_generation(pop)
         if(optimal.fitness > best):
             print(print(bestx))

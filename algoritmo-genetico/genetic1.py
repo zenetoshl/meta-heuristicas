@@ -113,7 +113,7 @@ def select(pop):
 
 #Cruzamento linear
 def breed(parent1, parent2):
-    global best, oldBest, globalBest
+    global best, oldBest, globalBest, bestX
     child = solution([parent1.x[0], parent2.x[1]])
     if(child.fitness < best):
         oldBest = best
