@@ -8,6 +8,7 @@ sig = 2
 L = 100
 N = 1000
 I = 500
+T = 100
 best = 100000
 oldBest = 10000000
 globalBest = 10000000
@@ -90,15 +91,17 @@ def generate_population(n):
 def breed_generation(pop):
     global gen
     gen = gen + 1
-    breeded_generation = []
-    for i in range(N):
+    pop.sort(key=lambda x: x.fitness, reverse=False)
+    pop = pop [0:int(N/2)]
+    breeded_generation = pop[0:T]
+    for i in range(N - T):
         p = []
         p.append(select(pop))
         p.append(select(pop))
         if(p[0].fitness > p[1].fitness):
-            breeded_generation.append(breed(p[1],p[0]))
+            breeded_generation.append(test_breed(p[1],p[0]))
         else:
-            breeded_generation.append(breed(p[0],p[1]))
+            breeded_generation.append(test_breed(p[0],p[1]))
         p.clear()
     return breeded_generation
 
@@ -110,6 +113,26 @@ def select(pop):
     selection.append(rd.choice(pop))
     selection.sort(key=lambda x: x.fitness, reverse=False)
     return selection[0]
+
+def test_breed(parent1, parent2):
+    global best, oldBest, globalBest, bestX
+    x = []
+    if(parent1.x[0] < parent2.x[0]):
+        x.append(rd.uniform(parent1.x[0], parent2.x[0]))
+    else:
+        x.append(rd.uniform(parent2.x[0], parent1.x[0]))
+    if(parent1.x[1] < parent2.x[1]):
+        x.append(rd.uniform(parent1.x[1], parent2.x[1]))
+    else:
+        x.append(rd.uniform(parent2.x[1], parent1.x[1]))
+    child = solution(x)
+    if(child.fitness < best):
+        oldBest = best
+        best = child.fitness
+        if(best < globalBest):
+            globalBest = best
+            bestX = child.x
+    return child
 
 #Cruzamento linear
 def breed(parent1, parent2):
@@ -132,7 +155,7 @@ for i in range(I):
     oldBest = 1000000
     gen = 0
     pop = generate_population(N)
-    while ((oldBest - best) > 0.1 and maxGen > gen):
+    while ((oldBest - best) > 0.00001 and maxGen > gen):
         pop = breed_generation(pop)
     best_genetic_list.append(best)
     print(best)
