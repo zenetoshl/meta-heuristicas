@@ -6,15 +6,12 @@ import pandas as pd
 P = 2
 sig = 2
 L = 100
+
 N = 1000
-I = 500
+I = 50
 T = 100
-best = 100000
-oldBest = 10000000
-globalBest = 10000000
-gen = 0
+
 maxGen = 1000
-bestX = [0, 0]
 
 #obj solution, x é o vetor de decisão e fitness é o fitness calculado para o vetor
 class solution:
@@ -147,23 +144,25 @@ def breed(parent1, parent2):
     return child
 
 best = 100000
-oldBest = 1000000
-pop = generate_population(N)
+oldBest = 10000000
+globalBest = 10000000
+gen = 0
+bestX = [0, 0]
 best_genetic_list  = []
 for i in range(I):
     best = 100000
     oldBest = 1000000
     gen = 0
     pop = generate_population(N)
-    while ((oldBest - best) > 0.00001 and maxGen > gen):
+    while ((oldBest - best) > 0.0000001 and maxGen > gen):
         pop = breed_generation(pop)
     best_genetic_list.append(best)
     print(best)
-min  = solution([0.7886751284,  0.4082483080])
-print(min.fitness)
-print()
-print(bestX)
+
 
 best_genetic_series = pd.Series(best_genetic_list)
 
 print(best_genetic_series.describe())
+
+print(best)
+print(bestX)

@@ -96,7 +96,7 @@ def simulated_annealing(lwrLim, uprLim, quality = f):
 resultList  = []
 solutionsList = []
 best = 0
-for i in range(100):
+for i in range(50):
     solution = simulated_annealing([0, 0, 10, 10], [1600, 1600, 200, 200], f)
     if(i == 0):
         best = solution
