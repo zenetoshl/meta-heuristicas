@@ -3,15 +3,13 @@ import random as rd
 import pandas as pd
 
 #Constantes
-P = 2
-sig = 2
-L = 100
-
 N = 1000
-I = 50
 T = 100
-
+mutation = 0.55
 maxGen = 40
+select_i = 5
+
+I = 50
 
 class solution:
     def __init__(self, x):
@@ -19,28 +17,27 @@ class solution:
         self.mutate()
         self.check_lim()
         self.fitness = self.fit(x)
-        
     def fit(self, x):
         fitness = self.f() * self.check_restritions(x)
         return fitness
 
     #checando as restrições g1, g2, e g3, cada uma delas adiciona um peso no fitness final caso não seja satisfeita
     def check_restritions(self, x):
-        multiplier = 1
+        peso = 1
         if(not (self.g1() <= 0 )):
-            multiplier = multiplier + 10000000000
+            peso = peso + 10000000000
         if(not (self.g2() <= 0) ):
-            multiplier = multiplier + 10000000000
+            peso = peso + 10000000000
         if(not (self.g3() <= 0) ):
-            multiplier = multiplier + 10000000000 
+            peso = peso + 10000000000 
         if(not (self.g4() <= 0) ):
-            multiplier = multiplier + 10000000000
-        return multiplier
+            peso = peso + 10000000000
+        return peso
 
     def mutate(self):
         u = rd.uniform(0, 1)
         for i in range(4):
-            if(rd.uniform(0, 1) > 0.55):
+            if(rd.uniform(0, 1) > mutation):
                 if(i < 2):
                     self.x[i] = self.x[i] + rd.randint(-5, 5)
                 else:
@@ -112,7 +109,7 @@ def breed_generation(pop):
 #selecao por torneio com n=3
 def select(pop):
     selection = []
-    for i in range(5):
+    for i in range(select_i):
         selection.append(rd.choice(pop))
     selection.sort(key=lambda x: x.fitness, reverse=False)
     return selection[0]
@@ -148,31 +145,24 @@ def set_genes(p1, p2):
                 genes.append(p2.x[i])
     return genes
 
-best = 10000000
-bestx = [0, 0, 0, 0]
-oldBest = 1000000000
+def g1 (x):
+    return (-(x[0]*0.0625) + 0.0193*x[2])
+def g2 (x):
+    return (-(x[1]*0.0625) + 0.00954*x[2])
+def g3 (x):
+    return ((-(math.pi*(x[2]**2)*x[3]) - (4/3)*math.pi*(x[2]**3)) + 1296000)
+def g4 (x):
+    return (x[3] - 240)
 
-gen = 0
-globalBest = 1000000000
-globalBestx = [0, 0, 0, 0]
-best_genetic_list  = []
-for i in range(I):
-    best = 10000000
-    bestx = [0, 0, 0, 0]
-    oldBest = 1000000000
-    gen = 0
-    pop = generate_population(N)
-    for j in range(maxGen):
-        pop = breed_generation(pop)
-        if((oldBest - best) < 0.0000001):
-            break
-    best_genetic_list.append(best)
-    if(best < globalBest):
-        globalBest = best
-        globalBestx = bestx
+x = [13, 7, 42.082511353887725, 176.85393269719583]
+print(g1(x))
+print(g2(x))
+print(g3(x))
+print(g4(x))
+print( )
+x = [13, 7, 41.92734517861851, 178.81748015383357]
+print(g1(x))
+print(g2(x))
+print(g3(x))
+print(g4(x))
 
-best_genetic_series = pd.Series(best_genetic_list)
-
-print(best_genetic_series.describe())
-print(globalBest)
-print(globalBestx)

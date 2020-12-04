@@ -2,16 +2,18 @@ import math
 import random as rd
 import pandas as pd
 
-#Constantes
 P = 2
 sig = 2
 L = 100
 
+#constantes
 N = 1000
-I = 50
 T = 100
-
+mutation = 0.95
 maxGen = 1000
+select_i = 3
+
+I = 50
 
 #obj solution, x é o vetor de decisão e fitness é o fitness calculado para o vetor
 class solution:
@@ -31,20 +33,20 @@ class solution:
     def check_restritions(self, x):
         x1 = x[0]
         x2 = x[1]
-        multiplier = 0
+        peso = 0
         if(not (self.g1() <= 0 )):
-            multiplier = multiplier + 1000000
+            peso = peso + 1000000
         if(not (self.g2() <= 0) ):
-            multiplier = multiplier + 1000000
+            peso = peso + 1000000
         if(not (self.g3() <= 0) ):
-            multiplier = multiplier + 1000000
-        if(multiplier == 0):
-            multiplier = 1
-        return multiplier
+            peso = peso + 1000000
+        if(peso == 0):
+            peso = 1
+        return peso
 
     def mutate(self):
-        if(rd.uniform(0, 1) > 0.98):
-            for i in range(2):
+        for i in range(2):
+            if(rd.uniform(0, 1) > mutation):
                 u = rd.uniform(0, 1)
                 pert = 0.1 * ((2*u) - 1)
                 self.x[i] = self.x[i] + pert

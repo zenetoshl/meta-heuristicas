@@ -9,9 +9,7 @@ beta = 0.005
 P = 2
 sig = 2
 L = 100
-N = 25000
-I = 100
-T = 50
+I = 50
 
 def quality_1(vars):
     x = vars[0]
@@ -24,33 +22,35 @@ def quality_2(vars):
     return (-0.0001 * ((abs(math.sin(x) * math.sin(y)*math.exp(abs(100-((math.sqrt(((x**2)+(y**2)))/math.pi)))))+1)**0.1))
 
 def g1 (x):
-    return ((((math.sqrt(2) * x[0] + x[1])/(math.sqrt(2)*(x[0]**2) + (2*x[0]*x[1]))) * P) - sig)
-
+    return (-x[0]*0.0625 + 0.0193*x[2])
 def g2 (x):
-    return ((((x[1])/(math.sqrt(2)*(x[0]**2) + (2*x[0]*x[1]))) * P) - sig)
-
+    return (-(x[1]*0.0625) + 0.00954*x[2])
 def g3 (x):
-    return ((((1)/(math.sqrt(2)*(x[1]) + x[0])) * P) - sig)
-
+    return ((-(math.pi*(x[2]**2)*x[3]) - (4/3)*math.pi*(x[2]**3)) + 1296000)
+def g4 (x):
+    return (x[3] - 240)
 def f(x):
-    return ((2 * (math.sqrt(2) * x[0]) + x[1]) * L) + check_restritions(x)
+    return (0.6224*x[0]*0.0625*x[2]*x[3] + 1.7781*(x[1]*0.0625)*(x[2]**2) + 3.1661*((x[0]*0.0625)**2)*x[3]+19.84*((x[0]*0.0625)**2)*x[2]) * check_restritions(x)
 
 def check_restritions(x):
-    x1 = x[0]
-    x2 = x[1]
-    multiplier = 0
+    peso = 1
     if(not (g1(x) <= 0 )):
-        multiplier = multiplier + 100000
+        peso = peso + 10000000
     if(not (g2(x) <= 0) ):
-        multiplier = multiplier + 100000
+        peso = peso + 10000000
     if(not (g3(x) <= 0) ):
-        multiplier = multiplier + 100000
-    return multiplier
+        peso = peso + 10000000
+    if(not (g4(x) <= 0) ):
+        peso = peso + 10000000
+    return peso
 
 def init(lwrLim, uprLim):
     l = []
     for i in range (len(lwrLim)):
-        x = rd.uniform(lwrLim[i], uprLim[i])
+        if(i < 2):
+            x = rd.randint(lwrLim[i], uprLim[i])
+        else:
+            x = rd.uniform(lwrLim[i], uprLim[i])
         l.append(x)
     return l
 
@@ -59,10 +59,16 @@ def adjust(vars, lwrLim, uprLim):
     for _ in range(1):
         i = rd.randint(0, len(temp_vars)-1)
         noiselim = (uprLim[i] - lwrLim[i]) * 0.5
-        noise = rd.uniform(-noiselim, noiselim)
+        if(i < 2):
+            noise = rd.randint(int(-noiselim), int(noiselim) + 1)
+        else:
+            noise = rd.uniform(-noiselim, noiselim)
         tmp_var = temp_vars[i] + noise
         while(tmp_var <= lwrLim[i] or tmp_var >= uprLim[i] ):
-            noise = rd.uniform(-noiselim, noiselim)
+            if(i < 2):
+                noise = rd.randint(int(-noiselim), int(noiselim) + 1)
+            else:
+                noise = rd.uniform(-noiselim, noiselim)
             tmp_var = temp_vars[i] + noise
         temp_vars[i] = tmp_var
     return temp_vars
@@ -89,7 +95,7 @@ resultList  = []
 solutionsList = []
 best = 0
 for i in range(50):
-    solution = simulated_annealing([0, 0], [1, 1], f)
+    solution = simulated_annealing([0, 0, 10, 10], [1600, 1600, 200, 200], f)
     if(i == 0):
         best = solution
     else:
