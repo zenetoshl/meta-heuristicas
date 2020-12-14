@@ -154,15 +154,30 @@ def g3 (x):
 def g4 (x):
     return (x[3] - 240)
 
-x = [13, 7, 42.082511353887725, 176.85393269719583]
-print(g1(x))
-print(g2(x))
-print(g3(x))
-print(g4(x))
-print( )
-x = [13, 7, 41.92734517861851, 178.81748015383357]
-print(g1(x))
-print(g2(x))
-print(g3(x))
-print(g4(x))
+best = 100000000
+oldBest = 10000000000
+globalBest = 10000000000
+globalBestx = [0,0,0,0]
+gen = 0
+bestx = [0, 0]
+best_genetic_list  = []
+for i in range(I):
+    best = 100000000
+    oldBest = 1000000000
+    gen = 0
+    pop = generate_population(N)
+    while (maxGen > gen):
+        pop = breed_generation(pop)
+        if(best < globalBest):
+            globalBest = best
+            globalBestx = bestx
+    best_genetic_list.append(best)
+    print(best)
 
+
+best_genetic_series = pd.Series(best_genetic_list)
+
+print(best_genetic_series.describe())
+
+print(best)
+print(bestx)
